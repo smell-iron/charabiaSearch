@@ -15,8 +15,8 @@ impl InternalTokenizer for UnicodeSegmenter {
             .as_ref()
             .split_word_bound_indices()
             .scan(0, |char_index, (byte_index, word)| {
-                let index = *char_index;
-                *char_index += word.chars().count();
+               let index = *char_index;
+               *char_index += word.chars().count();
                 Some(Token {
                     kind: TokenKind::Word,
                     word: Cow::Borrowed(word),
@@ -76,7 +76,7 @@ mod test {
             " ", "jump", " ", "32.3", " ", "feet", ",", " ", "right", "?", " ", "Brr", ",",
             " ", "it\'s", " ", "29.3", "°", "F", "!"]
         );
-        
+
         let orig = "為一包含一千多萬目詞的帶標記平衡語料庫";
         let processed = ProcessedText {
             original: orig,
