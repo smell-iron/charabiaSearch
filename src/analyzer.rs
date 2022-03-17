@@ -256,21 +256,21 @@ pub struct Analyzer<'a, A> {
     config: AnalyzerConfig<'a, A>,
 }
 
-pub struct AnalyzedText<'a, A> {
+pub struct AnalyzedText<'a, 't, A> {
     /// Processed text
-    processed: ProcessedText<'a>,
+    processed: ProcessedText<'t>,
     /// Pipeline used to proccess the text
     pipeline: &'a Pipeline,
     /// Classifier used to give token a kind
     classifier: TokenClassifier<'a, A>,
 }
 
-impl<'a, A> AnalyzedText<'a, A>
+impl<'a, 't, A> AnalyzedText<'a, 't, A>
 where
     A: AsRef<[u8]>,
 {
     /// Returns a `TokenStream` for the Analyzed text.
-    pub fn tokens(&'a self) -> TokenStream<'a> {
+    pub fn tokens(&'t self) -> TokenStream<'t> {
         let stream = self
             .pipeline
             .tokenizer
@@ -281,7 +281,7 @@ where
     }
 
     /// Attaches each token to its corresponding portion of the original text.
-    pub fn reconstruct(&'a self) -> impl Iterator<Item = (&'a str, Token<'a>)> {
+    pub fn reconstruct(&'t self) -> impl Iterator<Item = (&'t str, Token<'t>)> {
         self.tokens().map(move |t| (&self.processed.original[t.byte_start..t.byte_end], t))
     }
 }
@@ -312,7 +312,7 @@ impl<'a, A> Analyzer<'a, A> {
     /// let mut tokens = analyzed.tokens();
     /// assert!("the" == tokens.next().unwrap().text());
     /// ```
-    pub fn analyze<'t>(&'t self, text: &'t str) -> AnalyzedText<'t, A> {
+    pub fn analyze<'t>(&'a self, text: &'t str) -> AnalyzedText<'a, 't, A> {
         let pipeline = self.pipeline_from(text);
         let processed = pipeline.pre_processor.process(text);
         let classifier = TokenClassifier::new(self.config.stop_words);
@@ -325,7 +325,7 @@ impl<'a, A> Analyzer<'a, A> {
     /// if no Script is detected or no pipeline corresponds to the Script,
     /// the function try to get the default pipeline in the map;
     /// if no default pipeline exist in the map return the librairy DEFAULT_PIPELINE.
-    fn pipeline_from(&self, text: &str) -> &Pipeline {
+    fn pipeline_from<'t>(&'a self, text: &'t str) -> &'a Pipeline {
         let detected_script = self.detect_script(text);
         let filtered_pipelines: Vec<_> = self
             .config
