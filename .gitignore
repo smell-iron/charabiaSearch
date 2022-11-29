@@ -1,0 +1,10 @@
+/target
+meilisearch-core/target
+**/*.csv
+**/*.json_lines
+**/*.rs.bk
+/*.mdb
+/query-history.txt
+/data.ms
+Cargo.lock
+.idea

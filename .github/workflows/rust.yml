@@ -1,0 +1,24 @@
+name: Rust
+
+on:
+  pull_request:
+  push:
+    # trying and staging branches are for Bors config
+    branches:
+      - trying
+      - staging
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  tests:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
