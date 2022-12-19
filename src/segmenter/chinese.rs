@@ -25,8 +25,8 @@ impl Segmenter for ChineseSegmenter {
 //             arr[index] = segmented[index];
 //         }
 //         arr[l - 1] = to_segment; // 将其本身不经分割也加入索引
-        let segmented = [str, 1];
-        segmented[0] = to_segment;
+        let segmented = [to_segment];
+//         segmented[0] = to_segment;
         Box::new(segmented.into_iter())
     }
 }
