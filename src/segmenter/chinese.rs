@@ -20,7 +20,7 @@ impl Segmenter for ChineseSegmenter {
         for index in 0..l1{
             arr[index] = segmented1[index];
         }
-        for index in l1..l2{
+        for index in l1..l{
             arr[index] = segmented[index];
         }
 
