@@ -11,10 +11,20 @@ pub struct ChineseSegmenter;
 
 impl Segmenter for ChineseSegmenter {
     fn segment_str<'o>(&self, to_segment: &'o str) -> Box<dyn Iterator<Item = &'o str> + 'o> {
-//        let segmented = to_segment.split("");
-         let segmented = JIEBA.cut(to_segment, false); // disable Hidden Markov Models.
+       let segmented1 = to_segment.split("");
+       let l1 = segmented1.len();
+       let segmented = JIEBA.cut(to_segment, false); // disable Hidden Markov Models.
+       let l2 = segmented.len();
+       let l = l1 + l2;
+       let arr = [str, l];
+        for index in 0..l1{
+            arr[index] = segmented1[index];
+        }
+        for index in l1..l2{
+            arr[index] = segmented[index];
+        }
 
-        Box::new(segmented.into_iter())
+        Box::new(arr.into_iter())
     }
 }
 
